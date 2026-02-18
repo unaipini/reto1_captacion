@@ -1,0 +1,61 @@
+services:
+# Definimos el broker MQTT (con mosquitto)
+  mosquitto:
+    image: eclipse-mosquitto:2
+    ports:
+      - "1883:1883"
+    volumes:
+      - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+
+  # Configuramos la Base de Datos
+  base_datos:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: invernadero_db
+      POSTGRES_USER: deusto
+      POSTGRES_PASSWORD: deusto
+    ports:
+      - "5432:5432"
+    volumes:
+      - volumen_postgres:/var/lib/postgresql/data
+
+ # Produce los valores del sensor
+  sensor_tierra:
+    build: ./productor
+    container_name: monitor_suelo_01
+    environment:
+      # Conexión con el broker
+      HOST_BROKER: mosquitto
+      PUERTO_BROKER: "1883"
+      TEMA_PUBLICACION: "invernadero/sector_1/suelo"
+      ID_SENSOR: "sensor_suelo_01"
+      INTERVALO: "5"
+      
+      # Datos de simulación
+      TEMP_IDEAL: "18.0"
+      HUMEDAD_IDEAL: "75.0"
+      LUZ_IDEAL: "200"
+      PH_IDEAL: "6.0"
+    depends_on:
+      - mosquitto
+
+  # Recoge y almacena los datos del sensor
+  cerebro_datos:
+    build: ./consumidor
+    container_name: cerebro_datos
+    environment:
+      # Se suscribe a MQTT
+      HOST_BROKER: mosquitto
+      TEMA_SUSCRIPCION: "invernadero/#"
+      
+      # Base de Datos
+      HOST_BD: base_datos
+      NOMBRE_BD: invernadero_db
+      USUARIO_BD: deusto
+      CLAVE_BD: deusto
+    depends_on:
+      - mosquitto
+      - base_datos
+
+volumes:
+  volumen_postgres:
