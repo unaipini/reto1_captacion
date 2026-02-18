@@ -40,12 +40,12 @@ def main():
         print(f"[SENSOR] Error al conectar: {e}")
         return
 
-    # 3. Envío de datos
+    # Envío de datos
     try:
         while True:
             # Crea el paquete de datos
             datos = {
-                "id_sensor": id_sensor,
+                "sensor_id": id_sensor,
                 "timestamp": int(time.time() * 1000),
                 "temperatura": generar_dato(temp_media, 1.5), 
                 "humedad": generar_dato(hum_media, 5.0),     

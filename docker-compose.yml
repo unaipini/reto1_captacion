@@ -1,7 +1,7 @@
 services:
 # Definimos el broker MQTT (con mosquitto)
   mosquitto:
-    image: eclipse-mosquitto:2
+    image: eclipse-mosquitto:1.6.15
     ports:
       - "1883:1883"
     volumes:
@@ -42,7 +42,7 @@ services:
   # Recoge y almacena los datos del sensor
   cerebro_datos:
     build: ./consumidor
-    container_name: cerebro_datos
+    container_name: base_datos
     environment:
       # Se suscribe a MQTT
       HOST_BROKER: mosquitto
@@ -53,6 +53,9 @@ services:
       NOMBRE_BD: invernadero_db
       USUARIO_BD: deusto
       CLAVE_BD: deusto
+
+      PYTHONUNBUFFERED: "1"
+
     depends_on:
       - mosquitto
       - base_datos
