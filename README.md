@@ -9,34 +9,34 @@ Práctica: Captura de Datos con Docker Compose y MQTT
 
 ## 2. Descripción del proyecto
 
-El objetivo de esta práctica es diseñar e implementar un sistema de **adquisición automatizada de datos** utilizando contenedores Docker.
+El objetivo de esta práctica es diseñar e implementar un sistema de adquisición automatizada de datos por medio de contenedores Docker.
 
-Se ha desarrollado una arquitectura basada en el modelo 'publish/subscribe con MQTT', donde:
+Se ha desarrollado una arquitectura basada en el modelo publicador subscritoe con MQTT, donde:
 
-- Un contenedor simula un sensor agrícola que genera datos sintéticos.
-- Un broker MQTT distribuye los mensajes.
+- Un contenedor simula un sensor agrícola que genera datos realistas.
+- Un broker MQTT(mosquitto) distribuye los mensajes.
 - Un contenedor consumidor recibe los datos y los almacena en una base de datos PostgreSQL.
 - Se valida el almacenamiento mediante consultas SQL.
 
-Toda la infraestructura está orquestada con Docker Compose.
+Toda la infraestructura está gestionada con Docker Compose.
 
 
 ## 3. Arquitectura del sistema
 
 Arquitectura implementada:
 
-Sensor (Producer)
+Productor (Publicador&)
 ↓
 MQTT Broker (Mosquitto)
 ↓
-Consumidor (Subscriber)
+Consumidor (Suscriptor)
 ↓
 Base de datos PostgreSQL
 
 
 ### Componentes
 
-- 'sensor_tierra' → Genera datos sintéticos cada X segundos.
+- 'sensor_tierra' → Genera datos sintéticos cada 5 segundos.
 - 'mosquitto' → Broker MQTT.
 - 'cerebro_datos' → Suscriptor que almacena datos en la BD.
 - 'base_datos' → PostgreSQL.
@@ -44,14 +44,14 @@ Base de datos PostgreSQL
 
 ## 4. Caracterización del dato
 
-- Tipo de dato: Semiestructurado  
+- Tipo de dato: Semiestructurado -> Estructurado  (JSON --->JSONB(PostgreSQL))
 - Formato: JSON  
-- Frecuencia: 1 mensaje cada 5 segundos (configurable)  
+- Frecuencia: 5 segundos (configurable)  
 - Dominio: Sensores agrícolas (invernadero)  
 
 ### Campos enviados
 
-- 'id_sensor'
+- 'sensor_id'
 - 'timestamp' (millis)
 - 'temperatura'
 - 'humedad'
@@ -60,7 +60,7 @@ Base de datos PostgreSQL
 
 ### Generación de datos
 
-Los valores se generan utilizando una **distribución normal (gaussiana)** con un valor ideal configurable, simulando el comportamiento real de sensores físicos.
+Los valores se generan utilizando una distribución normal (gaussiana) con un valor ideal configurable, simulando el comportamiento real de sensores físicos.
 
 
 ## 5. Explicación de los pasos seguidos
@@ -68,26 +68,28 @@ Los valores se generan utilizando una **distribución normal (gaussiana)** con u
 1. Diseño de arquitectura basada en MQTT.
 2. Configuración del broker Mosquitto en Docker.
 3. Desarrollo del productor en Python usando `paho-mqtt`.
-4. Generación de datos sintéticos con distribución normal.
+4. Generación de datos reales con distribución normal.
 5. Desarrollo del consumidor:
    - Suscripción a topic `invernadero/#`
    - Conexión a PostgreSQL
    - Inserción de registros en la base de datos.
 6. Validación mediante consultas SQL.
-7. Orquestación completa mediante Docker Compose.
+7. Gestion completa mediante Docker Compose.
 
 ---
 
 ## 6. Instrucciones de uso
 
+
 ### Requisitos
 
 - Docker
-- Docker Compose
+- WSL
 
 ### Arranque del sistema
 
-```bash
+terminal bash con wsl
+arrancar el sistema docker(sudo service docker start)
 docker compose up --build
 El sistema iniciará:
 
@@ -107,15 +109,18 @@ Dentro de PostgreSQL:
 
 SELECT COUNT(*) FROM mediciones;
 SELECT * FROM mediciones ORDER BY id DESC LIMIT 5;
-El número de registros aumentará cada 5 segundos.
+
+Salir de PostgreSQL
+Pulsar Q
+
 
 Parar el sistema
-docker compose down
+Control C / docker compose down
+
 Para borrar datos persistentes:
 
 docker compose down -v
 
----##
 
 ## 7. Problemas / Retos encontrado
 
@@ -127,7 +132,6 @@ Gestión de conexión entre contenedores mediante nombre de servicio (no localho
 
 Alineación de credenciales entre consumidor y base de datos.
 
----##
 
 ## 8. Alternativas posibles
 
@@ -141,7 +145,6 @@ Implementación de QoS en MQTT.
 
 Uso de autenticación y TLS en el broker.
 
----##
 
 ## 9. Posibles vías de mejora
 
@@ -157,7 +160,6 @@ Escalado horizontal del consumidor.
 
 Implementar métricas y monitorización.
 
----##
 
 ## 10. Conclusión
 Se ha desarrollado una solución funcional de captura y almacenamiento de datos basada en tecnologías de contenedorización y mensajería ligera.
@@ -174,5 +176,4 @@ Validación efectiva del almacenamiento
 
 La arquitectura es escalable, modular y fácilmente extensible a entornos industriales o IoT reales.
 
----##
 
