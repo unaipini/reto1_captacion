@@ -3,6 +3,7 @@ import os
 import time
 import psycopg2
 import paho.mqtt.client as mqtt
+from datetime import datetime
 
 #Configuración MQTT
 MQTT_BROKER = os.getenv("HOST_BROKER", "mosquitto")
@@ -67,7 +68,10 @@ def guardar_lectura(conn, datos):
                 datos.get("ph_suelo"),
                 json.dumps(datos)
             ))
-        print(f"[BD] Guardado -> Sensor: {datos.get('sensor_id')} | Temp: {datos.get('temperatura')}")
+
+        timestamp_ms = datos.get("timestamp")
+        hora_legible = datetime.fromtimestamp(timestamp_ms / 1000.0).strftime('%H:%M:%S')
+        print(f"[BD] Guardado -> Sensor: {datos.get('sensor_id')} | Hora: {hora_legible}")
     except Exception as e:
         print(f"[ERROR BD] No se pudo guardar: {e}")
 
