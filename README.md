@@ -115,7 +115,7 @@ Para borrar datos persistentes:
 
 docker compose down -v
 
-7. Problemas / Retos encontrados
+## 7. Problemas / Retos encontrados
 
 Sincronización de arranque entre contenedores.
 
@@ -125,7 +125,7 @@ Gestión de conexión entre contenedores mediante nombre de servicio (no localho
 
 Alineación de credenciales entre consumidor y base de datos.
 
-8. Alternativas posibles
+## 8. Alternativas posibles
 
 Uso de API REST en lugar de MQTT.
 
@@ -137,7 +137,7 @@ Implementación de QoS en MQTT.
 
 Uso de autenticación y TLS en el broker.
 
-9. Posibles vías de mejora
+## 9. Posibles vías de mejora
 
 Añadir control de calidad del dato.
 
@@ -151,7 +151,7 @@ Escalado horizontal del consumidor.
 
 Implementar métricas y monitorización.
 
-10. Conclusión
+## 10. Conclusión
 Se ha desarrollado una solución funcional de captura y almacenamiento de datos basada en tecnologías de contenedorización y mensajería ligera.
 
 El sistema demuestra:
