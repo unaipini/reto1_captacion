@@ -10,6 +10,7 @@ services:
   # Configuramos la Base de Datos
   base_datos:
     image: postgres:15
+    container_name: base_datos
     environment:
       POSTGRES_DB: invernadero_db
       POSTGRES_USER: deusto
@@ -42,7 +43,7 @@ services:
   # Recoge y almacena los datos del sensor
   cerebro_datos:
     build: ./consumidor
-    container_name: base_datos
+    container_name: cerebro_datos
     environment:
       # Se suscribe a MQTT
       HOST_BROKER: mosquitto
