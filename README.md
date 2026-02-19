@@ -1,4 +1,4 @@
-Práctica: Captura de Datos con Docker Compose y MQTT
+# Reto 1 - Captacion: Captura de Datos con Docker Compose y MQTT
 
 ## 1. Miembros del equipo
 
@@ -25,12 +25,12 @@ Toda la infraestructura está gestionada con Docker Compose.
 
 Arquitectura implementada:
 
-Productor (Publicador&)
-↓
-MQTT Broker (Mosquitto)
-↓
-Consumidor (Suscriptor)
-↓
+Productor (Publicador&)  
+↓  
+MQTT Broker (Mosquitto)  
+↓  
+Consumidor (Suscriptor)  
+↓  
 Base de datos PostgreSQL
 
 
@@ -76,10 +76,8 @@ Los valores se generan utilizando una distribución normal (gaussiana) con un va
 6. Validación mediante consultas SQL.
 7. Gestion completa mediante Docker Compose.
 
----
 
 ## 6. Instrucciones de uso
-
 
 ### Requisitos
 
@@ -88,77 +86,81 @@ Los valores se generan utilizando una distribución normal (gaussiana) con un va
 
 ### Arranque del sistema
 
-terminal bash con wsl
+terminal bash con wsl  
 arrancar el sistema docker(sudo service docker start)
+``` bash
 docker compose up --build
+```
 El sistema iniciará:
 
-Broker MQTT
+- Broker MQTT
 
-Base de datos
+- Base de datos
 
-Sensor productor
+- Sensor productor
 
-Consumidor
+- Consumidor
 
-Verificación del almacenamiento
+### Verificación del almacenamiento
+
 Abrir otra terminal:
-
+``` bash
 docker exec -it <nombre_contenedor_postgres> psql -U deusto -d invernadero_db
+```
 Dentro de PostgreSQL:
-
+``` sql
 SELECT COUNT(*) FROM mediciones;
 SELECT * FROM mediciones ORDER BY id DESC LIMIT 5;
-
-Salir de PostgreSQL
+```
+Salir de PostgreSQL  
 Pulsar Q
 
 
-Parar el sistema
+Parar el sistema  
 Control C / docker compose down
 
 Para borrar datos persistentes:
-
+``` bash
 docker compose down -v
-
+```
 
 ## 7. Problemas / Retos encontrado
 
-Sincronización de arranque entre contenedores.
+- Sincronización de arranque entre contenedores
 
-Configuración correcta de variables de entorno.
+- Configuración correcta de variables de entorno
 
-Gestión de conexión entre contenedores mediante nombre de servicio (no localhost).
+- Gestión de conexión entre contenedores mediante nombre de servicio (no localhost)
 
-Alineación de credenciales entre consumidor y base de datos.
+- Alineación de credenciales entre consumidor y base de datos
 
 
 ## 8. Alternativas posibles
 
-Uso de API REST en lugar de MQTT.
+- Uso de API REST en lugar de MQTT
 
-Uso de RabbitMQ o Kafka como sistema de mensajería.
+- Uso de RabbitMQ o Kafka como sistema de mensajería
 
-Uso de MongoDB como base de datos NoSQL.
+- Uso de MongoDB como base de datos NoSQL
 
-Implementación de QoS en MQTT.
+- Implementación de QoS en MQTT
 
-Uso de autenticación y TLS en el broker.
+- Uso de autenticación y TLS en el broker
 
 
 ## 9. Posibles vías de mejora
 
-Añadir control de calidad del dato.
+- Añadir control de calidad del dato
 
-Implementar validación de esquema JSON.
+- Implementar validación de esquema JSON
 
-Incorporar dashboard de visualización (Grafana).
+- Incorporar dashboard de visualización (Grafana)
 
-Añadir autenticación al broker MQTT.
+- Añadir autenticación al broker MQTT
 
-Escalado horizontal del consumidor.
+- Escalado horizontal del consumidor
 
-Implementar métricas y monitorización.
+- Implementar métricas y monitorización
 
 
 ## 10. Conclusión
@@ -166,13 +168,13 @@ Se ha desarrollado una solución funcional de captura y almacenamiento de datos 
 
 El sistema demuestra:
 
-Captura automatizada de datos
+- Captura automatizada de datos
 
-Comunicación desacoplada mediante MQTT
+- Comunicación desacoplada mediante MQTT
 
-Persistencia estructurada en base de datos
+- Persistencia estructurada en base de datos
 
-Validación efectiva del almacenamiento
+- Validación efectiva del almacenamiento
 
 La arquitectura es escalable, modular y fácilmente extensible a entornos industriales o IoT reales.
 
